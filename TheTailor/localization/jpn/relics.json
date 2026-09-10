@@ -11,7 +11,7 @@
   "THETAILOR-MASTERS_TOOLSET.description": "戦闘開始時、[gold]レザーミニオン[/gold]以外のランダムな[gold]ミニオン[/gold]を[blue]2[/blue]体仕立て、そのミニオンの固有効果を発動させる。",
   "THETAILOR-MASTERS_TOOLSET.flavor": "「賢く使えよ、坊主。そう、お前の道具と同じだが……達人のように使いこなすのだ！！」\n- ギルドマスター・クレス",
   "THETAILOR-MASTERS_TOOLSET.title": "巨匠の道具箱",
-  "THETAILOR-MINION_CRITIC.description": "ターン開始時、カードを[blue]{Cards}[/blue]枚引き、ランダムな[gold]ミニオン[/gold]1体を死亡させる。",
+  "THETAILOR-MINION_CRITIC.description": "ターン開始時、カードを[blue]{Cards}[/blue]枚引き、右端の[gold]ミニオン[/gold]を死亡させる。",
   "THETAILOR-MINION_CRITIC.flavor": "「我が師はこの品に何の書き置きも遺さなかった。故に師に代わって戯言を記そう。『着飾った批評家を信用するな！』」\n- テイラー",
   "THETAILOR-MINION_CRITIC.title": "批評家ミニオン",
   "THETAILOR-PATIENT_PATCH.description": "[gold]パッチ[/gold]が[gold]保留[/gold]を得る。各戦闘で最初にカードを[gold]廃棄[/gold]した[blue]{Cards}[/blue]回、[gold]パッチ[/gold]を1枚[gold]手札[/gold]に加える。",
