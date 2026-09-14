@@ -83,7 +83,7 @@
   "THETAILOR-MENDING.title": "修繕",
   "THETAILOR-MONOCHROME.description": "[gold]手札[/gold]のカードを1枚{IfUpgraded:show:選んで[gold]アップグレード[/gold]し|選び}、そのコピーを[gold]手札[/gold]に加えてそれらを[gold]縫合[/gold]する。",
   "THETAILOR-MONOCHROME.title": "単色仕立て",
-  "THETAILOR-NEEDLEWORK.description": "[gold]デリケート[/gold]{Delicate:diff()}。\n{Damage:diff()}ダメージを与える。\nカードを{Cards:diff()}枚引き、[gold]アップグレード[/gold]する。",
+  "THETAILOR-NEEDLEWORK.description": "[gold]デリケート[/gold]{Delicate:diff()}。\\n{Damage:diff()}ダメージを与える。\\nカードを{Cards:diff()}枚引き、[gold]それをアップグレード[/gold]する。",
   "THETAILOR-NEEDLEWORK.title": "針仕事",
   "THETAILOR-NEEDLE_STORM.description": "すべての敵に{Damage:diff()}ダメージを2回与える。",
   "THETAILOR-NEEDLE_STORM.title": "ニードルストーム",
