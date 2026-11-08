@@ -1,57 +1,43 @@
-using System.Collections.Generic;
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.Extensions;
-using MegaCrit.Sts2.Core.Logging;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
-using MinionLib.Minion;
-using MinionLib.Powers.Patches;
-using HarmonyLib;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Players;
-using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 
-namespace TheTailor.Powers
+namespace TheTailor.Powers;
+
+public sealed class WoolPower : CustomPowerModel
 {
-    public sealed class WoolPower : CustomPowerModel
+    public override string? CustomPackedIconPath => "res://TheTailor/images/powers/woolSmall.png";
+    public override string? CustomBigIconPath => "res://TheTailor/images/powers/wool.png";
+    public override string? CustomBigBetaIconPath => "res://TheTailor/images/powers/wool.png";
+    public override PowerType Type => PowerType.Buff;
+    public override PowerStackType StackType => PowerStackType.Counter;
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WoolWeakPower>()];
+
+    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-        public override string? CustomPackedIconPath => "res://TheTailor/images/powers/woolSmall.png";
-        public override string? CustomBigIconPath => "res://TheTailor/images/powers/wool.png";
-        public override string? CustomBigBetaIconPath => "res://TheTailor/images/powers/wool.png";
-        public override PowerType Type => PowerType.Buff;
-        public override PowerStackType StackType => PowerStackType.Counter;
-        protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<WoolWeakPower>()];
-
-        public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+        if (Owner.IsPet && Owner.PetOwner == player)
         {
-            if (Owner.IsPet && Owner.PetOwner == player)
-            {
-                Flash();
-                await PowerCmd.Apply<WoolWeakPower>(choiceContext, player.Creature, Amount, Owner, null);
-            }
+            Flash();
+            await PowerCmd.Apply<WoolWeakPower>(choiceContext, player.Creature, Amount, Owner, null);
         }
+    }
 
-        /*
-        public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
+    /*
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
+    {
+        if (side == CombatSide.Player)
         {
-            if (side == CombatSide.Player)
+            foreach (Creature creature in participants)
             {
-                foreach (Creature creature in participants)
+                if (Owner.IsPet && Owner.PetOwner == creature.Player && creature.HasPower<WoolWeakPower>())
                 {
-                    if (Owner.IsPet && Owner.PetOwner == creature.Player && creature.HasPower<WoolWeakPower>())
-                    {
-                        await PowerCmd.Remove<WoolWeakPower>(creature);
-                    }
+                    await PowerCmd.Remove<WoolWeakPower>(creature);
                 }
             }
         }
-        */
     }
+    */
 }

@@ -1,12 +1,10 @@
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core;
-using MegaCrit.Sts2.Core.ValueProps;
 using MinionLib.Action;
 using MinionLib.Commands;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Powers;
 using MinionLib.Utilities;
 using TheTailor.Minions;
 
@@ -20,13 +18,10 @@ public sealed class TailorMinionOrderAction : ActionModel
 
     protected override async Task OnAct(PlayerChoiceContext choiceContext, Creature? target)
     {
-        if (Owner == null || Owner.PetOwner == null)
-        {
-            return;
-        }
+        if (Owner?.PetOwner == null) return;
 
-        PetsOrderAccessor accessor = new PetsOrderAccessor(Owner.PetOwner);
-        if (accessor != null && accessor.Pets != null && accessor.Pets.Contains(Owner) && accessor.Pets.Count > 1)
+        var accessor = new PetsOrderAccessor(Owner.PetOwner);
+        if (accessor is { Pets: not null } && accessor.Pets.Contains(Owner) && accessor.Pets.Count > 1)
         {
             accessor.Pets.Remove(Owner);
             accessor.Pets.Insert(0, Owner);

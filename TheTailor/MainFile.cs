@@ -1,9 +1,12 @@
-using TheTailor.Config;
+using System.Reflection;
 using BaseLib.Config;
 using Godot;
+using Godot.Bridge;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
-using System.Reflection;
+using TheTailor.Config;
+using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 
 namespace TheTailor;
 
@@ -11,7 +14,7 @@ namespace TheTailor;
 public partial class MainFile : Node
 {
     public const string ModId = "TheTailor";
-    public static MegaCrit.Sts2.Core.Logging.Logger Logger { get; } = new(ModId, MegaCrit.Sts2.Core.Logging.LogType.Generic);
+    public static Logger Logger { get; } = new(ModId, LogType.Generic);
 
     public static void Initialize()
     {
@@ -20,6 +23,6 @@ public partial class MainFile : Node
         harmony.PatchAll();
 
         var assembly = Assembly.GetExecutingAssembly();
-        Godot.Bridge.ScriptManagerBridge.LookupScriptsInAssembly(assembly);
+        ScriptManagerBridge.LookupScriptsInAssembly(assembly);
     }
 }

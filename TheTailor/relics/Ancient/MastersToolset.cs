@@ -1,53 +1,49 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils;
-using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.RelicPools;
-using MegaCrit.Sts2.Core.Rooms;
-using MinionLib.Commands;
-using TheTailor;
 using TheTailor.Minions;
-using MinionLib.Minion;
-using TheTailor.Character;
 
-namespace TheTailor.Relics.Ancient
+namespace TheTailor.Relics.Ancient;
+
+[Pool(typeof(SharedRelicPool))]
+public class MastersToolset : CustomRelicModel
 {
-    [Pool(typeof(SharedRelicPool))]
-    public class MastersToolset : CustomRelicModel
-    {
-        public override RelicRarity Rarity => RelicRarity.Ancient;
-        public override bool SpawnsPets => true;
-        public override string PackedIconPath => "res://TheTailor/images/relics/mastersToolkit.png";
-        protected override string PackedIconOutlinePath => "res://TheTailor/images/relics/mastersToolkitOutline.png";
-        protected override string BigIconPath => "res://TheTailor/images/relics/mastersToolkitBig.png";
-        public override async Task BeforeCombatStart()
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                int random = Owner.RunState.Rng.CombatCardGeneration.NextInt(5);
+    public override RelicRarity Rarity => RelicRarity.Ancient;
+    public override bool SpawnsPets => true;
+    public override string PackedIconPath => "res://TheTailor/images/relics/mastersToolkit.png";
+    protected override string PackedIconOutlinePath => "res://TheTailor/images/relics/mastersToolkitOutline.png";
+    protected override string BigIconPath => "res://TheTailor/images/relics/mastersToolkitBig.png";
 
-                switch (random)
-                {
-                    case 0:
-                        await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(new ThrowingPlayerChoiceContext(), Owner, true, withTriggers: 1);
-                        break;
-                    case 1:
-                        await TailorMinionCmd.AddOrReplaceMinion<MinionDenim>(new ThrowingPlayerChoiceContext(), Owner, true, withTriggers: 1);
-                        break;
-                    case 2:
-                        await TailorMinionCmd.AddOrReplaceMinion<MinionSilk>(new ThrowingPlayerChoiceContext(), Owner, true);
-                        break;
-                    case 3:
-                        await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(new ThrowingPlayerChoiceContext(), Owner, true);
-                        break;
-                    case 4:
-                        await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(new ThrowingPlayerChoiceContext(), Owner, true);
-                        break;
-                }
+    public override async Task BeforeCombatStart()
+    {
+        for (var i = 0; i < 2; i++)
+        {
+            var random = Owner.RunState.Rng.CombatCardGeneration.NextInt(5);
+
+            switch (random)
+            {
+                case 0:
+                    await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(new ThrowingPlayerChoiceContext(), Owner,
+                        true, withTriggers: 1);
+                    break;
+                case 1:
+                    await TailorMinionCmd.AddOrReplaceMinion<MinionDenim>(new ThrowingPlayerChoiceContext(), Owner,
+                        true, withTriggers: 1);
+                    break;
+                case 2:
+                    await TailorMinionCmd.AddOrReplaceMinion<MinionSilk>(new ThrowingPlayerChoiceContext(), Owner,
+                        true);
+                    break;
+                case 3:
+                    await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(new ThrowingPlayerChoiceContext(), Owner,
+                        true);
+                    break;
+                case 4:
+                    await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(new ThrowingPlayerChoiceContext(), Owner,
+                        true);
+                    break;
             }
         }
     }
