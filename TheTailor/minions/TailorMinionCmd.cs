@@ -14,9 +14,6 @@ using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.Saves;
-using MinionLib.Commands;
-using MinionLib.Minion;
-using MinionLib.Utilities;
 using TheTailor.Cards.Token;
 using TheTailor.Extensions;
 using TheTailor.Powers;
@@ -52,12 +49,11 @@ public static class TailorMinionCmd
     ///     Adds a minion.
     /// </summary>
     public static async Task<bool> AddMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner,
-        int maxHpOverride = 0, int withTriggers = 0, bool toFront = false) where T : MinionModel
+        int maxHpOverride = 0, int withTriggers = 0, bool toFront = false) where T : TailorMinion
     {
         if (CanMinionBeAdded(owner))
         {
-            var result = await MinionCmd.AddMinion<T>(playerChoiceContext, owner,
-                new MinionSummonOptions(Position: MinionPosition.Front));
+            var result = await MinionCmd.AddMinion<T>(playerChoiceContext, owner);
             if (maxHpOverride > 0 && result != null) await CreatureCmd.SetMaxAndCurrentHp(result, maxHpOverride);
 
             if (toFront)
@@ -106,8 +102,7 @@ public static class TailorMinionCmd
         }
         else
         {
-            var result = await MinionCmd.AddMinion<T>(playerChoiceContext, owner,
-                new MinionSummonOptions(Position: MinionPosition.Front));
+            var result = await MinionCmd.AddMinion<T>(playerChoiceContext, owner);
             if (maxHpOverride > 0 && result != null) await CreatureCmd.SetMaxAndCurrentHp(result, maxHpOverride);
 
             await PutOstyAtBack(playerChoiceContext, owner);
@@ -128,7 +123,7 @@ public static class TailorMinionCmd
     /// </summary>
     public static async Task<bool> ReplaceMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner,
         int replaceIndex, bool convert = false, bool first = false, int maxHpOverride = 0, int withTriggers = 0)
-        where T : MinionModel
+        where T : TailorMinion
     {
         var accessor = new PetsOrderAccessor(owner);
 
@@ -148,8 +143,7 @@ public static class TailorMinionCmd
             accessor.Pets[replaceIndex].RemoveAllPowersInternalExcept();
 
             await CreatureCmd.Kill(accessor.Pets[replaceIndex], true);
-            var newMinion = await MinionCmd.AddMinion<T>(playerChoiceContext, owner,
-                new MinionSummonOptions(Position: MinionPosition.Front));
+            var newMinion = await MinionCmd.AddMinion<T>(playerChoiceContext, owner);
             accessor.Pets.Remove(newMinion);
             accessor.Pets.Insert(replaceIndex, newMinion);
             _ = MinionAnimCmd.Rearrange(duration: 0.5f);

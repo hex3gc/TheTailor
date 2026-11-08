@@ -3,24 +3,41 @@ using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.GodotExtensions;
 using MegaCrit.Sts2.Core.Nodes.Screens.ScreenContext;
 using MegaCrit.Sts2.Core.ValueProps;
-using MinionLib.Minion;
-using MinionLib.Utilities;
-using TheTailor.BaseLibAdapters;
 
 namespace TheTailor.Minions;
 
-public abstract class TailorMinion : CustomMinionModel
+public abstract class TailorMinion : CustomMonsterModel
 {
+    public override string DeathSfx => "event:/sfx/characters/osty/osty_die";
+    public override bool HasDeathSfx => true;
+
     public override string? HurtSfx => "res://TheTailor/audio/clothHit1.ogg";
     public override float DeathAnimLengthOverride => 0.8f;
     public override float HpBarSizeReduction => 12f;
+
+    protected override MonsterMoveStateMachine GenerateMoveStateMachine()
+    {
+        MoveState idle = new("MINION_IDLE", _ => Task.CompletedTask)
+        {
+            FollowUpState = null
+        };
+        idle.FollowUpState = idle;
+        return new MonsterMoveStateMachine([idle], idle);
+    }
+
+    public virtual Task OnSummon(PlayerChoiceContext choiceContext, Player owner, MinionSummonOptions options)
+    {
+        return Task.CompletedTask;
+    }
 
     public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature,
         bool wasRemovalPrevented, float deathAnimLength)

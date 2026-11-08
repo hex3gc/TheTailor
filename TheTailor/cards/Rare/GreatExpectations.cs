@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using TheTailor.Character;
 using TheTailor.Minions;
-using MinionLib.Commands;
-using MinionLib.Utilities;
 
 namespace TheTailor.Cards.Rare;
 

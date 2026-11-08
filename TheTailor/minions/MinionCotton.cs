@@ -1,8 +1,6 @@
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MinionLib.Minion;
-using MinionLib.Powers;
 using TheTailor.Powers;
 
 namespace TheTailor.Minions;
@@ -19,6 +17,5 @@ public sealed class MinionCotton : TailorMinion
     {
         await PowerCmd.Apply<TailorMadePower>(playerChoiceContext, Creature, 1m, owner.Creature, options.Source);
         await PowerCmd.Apply<CottonPower>(playerChoiceContext, Creature, 1m, owner.Creature, options.Source);
-        await PowerCmd.Apply<TailorMinionOrderAction>(playerChoiceContext, Creature, 1m, owner.Creature, options.Source);
     }
 }

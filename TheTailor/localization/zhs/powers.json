@@ -111,9 +111,5 @@
     "THETAILOR-CHEESE_STRENGTH_POWER.smartDescription": "在本回合结束前获得[blue]{Amount}[/blue]点[gold]力量[/gold]。",
     "THETAILOR-SILK_DEXTERITY_POWER.title": "丝绸的敏捷",
     "THETAILOR-SILK_DEXTERITY_POWER.description": "在本回合结束前获得[gold]敏捷[/gold]。",
-    "THETAILOR-SILK_DEXTERITY_POWER.smartDescription": "在本回合结束前获得[blue]{Amount}[/blue]点[gold]敏捷[/gold]。",
-
-    "TAILOR_MINION_ORDER_ACTION.title": "仆从换位操作",
-    "TAILOR_MINION_ORDER_ACTION.description": "",
-    "TAILOR_MINION_ORDER_ACTION.smartDescription": ""
+    "THETAILOR-SILK_DEXTERITY_POWER.smartDescription": "在本回合结束前获得[blue]{Amount}[/blue]点[gold]敏捷[/gold]。"
 }

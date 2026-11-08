@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using TheTailor.Character;
 using TheTailor.Minions;
-using MinionLib.Commands;
-using MinionLib.Utilities;
 
 namespace TheTailor.Cards.Common;
 

@@ -9,8 +9,6 @@ using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheTailor.Character;
 using TheTailor.Minions;
-using MinionLib.Commands;
-using MinionLib.Utilities;
 
 namespace TheTailor.Cards.Rare;
 

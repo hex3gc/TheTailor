@@ -111,9 +111,5 @@
     "THETAILOR-CHEESE_STRENGTH_POWER.smartDescription": "Gain [blue]{Amount}[/blue] [gold]Strength[/gold] until the end of this turn.",
     "THETAILOR-SILK_DEXTERITY_POWER.title": "Silk Dexterity",
     "THETAILOR-SILK_DEXTERITY_POWER.description": "Gain [gold]Dexterity[/gold] until the end of this turn.",
-    "THETAILOR-SILK_DEXTERITY_POWER.smartDescription": "Gain [blue]{Amount}[/blue] [gold]Dexterity[/gold] until the end of this turn.",
-
-    "TAILOR_MINION_ORDER_ACTION.title": "Minion Reorder Action",
-    "TAILOR_MINION_ORDER_ACTION.description": "",
-    "TAILOR_MINION_ORDER_ACTION.smartDescription": ""
+    "THETAILOR-SILK_DEXTERITY_POWER.smartDescription": "Gain [blue]{Amount}[/blue] [gold]Dexterity[/gold] until the end of this turn."
 }

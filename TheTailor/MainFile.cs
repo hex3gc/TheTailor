@@ -6,6 +6,7 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using TheTailor.Config;
+using TheTailor.Minions;
 using Logger = MegaCrit.Sts2.Core.Logging.Logger;
 
 namespace TheTailor;
@@ -21,6 +22,7 @@ public partial class MainFile : Node
         ModConfigRegistry.Register(ModId, new TheTailorConfig());
         Harmony harmony = new(ModId);
         harmony.PatchAll();
+        MinionHooks.Initialize();
 
         var assembly = Assembly.GetExecutingAssembly();
         ScriptManagerBridge.LookupScriptsInAssembly(assembly);

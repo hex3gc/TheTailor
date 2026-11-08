@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheTailor.Character;
 using TheTailor.Minions;
-using MinionLib.Commands;
-using MinionLib.Utilities;
 
 namespace TheTailor.Relics.Shop;
 

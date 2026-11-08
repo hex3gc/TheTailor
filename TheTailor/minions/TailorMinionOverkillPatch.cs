@@ -6,8 +6,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using MinionLib.Commands;
-using MinionLib.Minion;
 using TheTailor.Powers;
 
 #pragma warning disable CS8600

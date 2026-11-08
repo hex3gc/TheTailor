@@ -11,10 +11,6 @@
     {
       "id": "BaseLib",
       "min_version": "3.4.5"
-    },
-    {
-      "id": "MinionLib",
-      "min_version": "0.6.2"
     }
   ],
   "affects_gameplay": true
