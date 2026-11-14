@@ -47,7 +47,6 @@ Install on the [Steam Workshop](https://github.com/hex3gc/TheTailor/releases) or
 ### Dependencies
 - **Slay The Spire 2** (Beta branch)
 - The latest **BaseLib** from [Github](https://github.com/Alchyr/BaseLib-StS2) or [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3737335127)
-- The latest **MinionLib** from [Github](https://github.com/FuYnAloft/MinionLib) or [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?l=english&id=3747595039)
 
 ### Frequently asked  questions
 **My save has been reset! What happened?**

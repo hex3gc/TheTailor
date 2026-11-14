@@ -4,71 +4,33 @@ using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.CardPools;
-using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.ValueProps;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheTailor;
-using TheTailor.Extensions;
-using TheTailor.Cards;
-using TheTailor.Minions;
-using MinionLib.Commands;
-using MinionLib.Minion;
-using MegaCrit.Sts2.Core.Rooms;
-using MegaCrit.Sts2.Core.Commands.Builders;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using TheTailor.Character;
-using MegaCrit.Sts2.Core.Logging;
-using MegaCrit.Sts2.Core.Context;
-using Godot;
-using MegaCrit.Sts2.Core.Nodes.CommonUi;
-using MegaCrit.Sts2.Core.Nodes;
-using MegaCrit.Sts2.Core.Nodes.Vfx;
-using TheTailor.Cards.Token;
-using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Combat.History.Entries;
 
-namespace TheTailor.Cards.Uncommon
+namespace TheTailor.Cards.Uncommon;
+
+[Pool(typeof(TheTailorCardPool))]
+public class Trim() : CustomCardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
-    [Pool(typeof(TheTailorCardPool))]
-    public class Trim() : CustomCardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
+    public override string? PortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
+    public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
+
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
-        public override string? PortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
-        public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/trimBeta.png";
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
+        var cardModels = await CardSelectCmd.FromHand(
+            prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1), context: choiceContext,
+            player: Owner, filter: null, source: this);
+        foreach (var cardModel in cardModels) await CardCmd.Exhaust(choiceContext, cardModel);
 
-        protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+        if (IsUpgraded)
         {
-            await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-            IEnumerable<CardModel> cardModels = await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1), context: choiceContext, player: Owner, filter: null, source: this);
-            foreach(CardModel cardModel in cardModels)
-            {
-                await CardCmd.Exhaust(choiceContext, cardModel);
-            }
-
-            if (IsUpgraded)
-            {
-                foreach (CardModel item in PileType.Hand.GetPile(Owner).Cards.Where((CardModel c) => c.IsUpgradable))
-                {
-                    CardCmd.Upgrade(item);
-                }
-            }
-            else
-            {
-                CardModel? cardModel = await CardSelectCmd.FromHandForUpgrade(choiceContext, Owner, this);
-                if (cardModel != null)
-                {
-                    CardCmd.Upgrade(cardModel);
-                }
-            }
+            foreach (var item in PileType.Hand.GetPile(Owner).Cards.Where(c => c.IsUpgradable)) CardCmd.Upgrade(item);
+        }
+        else
+        {
+            var cardModel = await CardSelectCmd.FromHandForUpgrade(choiceContext, Owner, this);
+            if (cardModel != null) CardCmd.Upgrade(cardModel);
         }
     }
 }

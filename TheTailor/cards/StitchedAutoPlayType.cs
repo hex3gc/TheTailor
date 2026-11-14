@@ -1,11 +1,9 @@
 using BaseLib.Patches.Content;
 using MegaCrit.Sts2.Core.Entities.Cards;
 
-namespace TheTailor
+namespace TheTailor;
+
+public static class StitchedAutoPlayType
 {
-    public static class StitchedAutoPlayType
-    {
-        [CustomEnum]
-        public static AutoPlayType Stitched;
-    }
+    [CustomEnum] public static AutoPlayType Stitched;
 }

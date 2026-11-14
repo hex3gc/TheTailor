@@ -1,9 +1,7 @@
 using Godot;
 
-namespace TheTailor.Cards
-{
-    public partial class StitchOverlay : Control
-    {
+namespace TheTailor.Cards;
 
-    }
+public partial class StitchOverlay : Control
+{
 }

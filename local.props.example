@@ -1,0 +1,11 @@
+<!-- Copy this file to local.props (untracked) and fill in your paths. -->
+<Project>
+    <PropertyGroup>
+        <!-- Path to your Godot (MegaDot) executable -->
+        <GodotPath>C:\...\MegaDot_v4.5.1-stable_mono_win64_console.exe</GodotPath>
+        <!-- Slay the Spire 2 install folder -->
+        <Sts2Path>C:/Program Files (x86)/Steam/steamapps/common/Slay the Spire 2/</Sts2Path>
+        <!-- Folder containing sts2.dll and 0Harmony.dll (data_sts2_windows_x86_64 on Windows) -->
+        <Sts2DataDir>C:/Program Files (x86)/Steam/steamapps/common/Slay the Spire 2/data_sts2_windows_x86_64</Sts2DataDir>
+    </PropertyGroup>
+</Project>
