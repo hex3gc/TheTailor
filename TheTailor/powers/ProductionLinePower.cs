@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -19,10 +20,10 @@ public sealed class ProductionLinePower : CustomPowerModel
     public override async Task AfterPlayerTurnStartEarly(PlayerChoiceContext choiceContext, Player player)
     {
         if (Owner == player.Creature)
-            for (var i = 0; i < Amount; i++)
-                if (await TailorMinionCmd.AddMinion<MinionLinen>(choiceContext, player, toFront: true))
-                    Flash();
-                else
-                    break;
+        {
+            Flash();
+            await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(choiceContext, player, true);
+            await PowerCmd.Decrement(this);
+        }
     }
 }

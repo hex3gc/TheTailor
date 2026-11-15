@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheTailor.Character;
+using TheTailor.Powers;
 
 namespace TheTailor.Cards.Rare;
 
@@ -19,14 +20,8 @@ public class StrikeAPose() : CustomCardModel(0, CardType.Attack, CardRarity.Rare
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/strikeAPoseBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/strikeAPoseBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/strikeAPoseBeta.png";
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromPower<StrengthPower>(), HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
-    ];
-
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<StrengthPower>(), HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -40,7 +35,7 @@ public class StrikeAPose() : CustomCardModel(0, CardType.Attack, CardRarity.Rare
             .Execute(choiceContext);
 
         var targets = CombatState.HittableEnemies.ToList();
-        await PowerCmd.Apply<StrengthPower>(choiceContext, targets, -xCost, Owner.Creature, null);
+        await PowerCmd.Apply<StrikeAPoseStrengthPower>(choiceContext, targets, xCost, Owner.Creature, null);
     }
 
     protected override void OnUpgrade()

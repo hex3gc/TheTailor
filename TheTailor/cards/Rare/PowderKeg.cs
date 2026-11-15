@@ -18,24 +18,18 @@ public class PowderKeg() : CustomCardModel(1, CardType.Power, CardRarity.Rare, T
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/powderKegBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/powderKegBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/powderKegBeta.png";
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.LeatherMinion), HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.LeatherMinion),
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)
-    ];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9, ValueProp.Unpowered)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(12, ValueProp.Unpowered)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        await PowerCmd.Apply<PowderKegPower>(choiceContext, Owner.Creature, DynamicVars.Damage.IntValue, Owner.Creature,
-            this);
+        await PowerCmd.Apply<PowderKegPower>(choiceContext, Owner.Creature, DynamicVars.Damage.IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3);
+        DynamicVars.Damage.UpgradeValueBy(4);
     }
 }

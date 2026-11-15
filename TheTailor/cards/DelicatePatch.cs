@@ -1,5 +1,6 @@
 using Godot;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -23,8 +24,58 @@ internal static class DelicatePatch
             extraDelicacies += cardPlay.Card.Owner.Creature.GetPowerAmount<SteadyHandPower>();
 
             cardPlay.Card.DynamicVars["Delicate"].BaseValue -= 1;
-            if (cardPlay.Card.DynamicVars["Delicate"].IntValue + extraDelicacies <= 1)
+            if (cardPlay.Card.DynamicVars["Delicate"].IntValue + extraDelicacies <= 1) 
+            {
                 cardPlay.Card.AddKeyword(CardKeyword.Exhaust);
+            }
+        }
+    }
+}
+
+/// <summary>
+///     Clamps the Replay count of a card to its Delicate number
+/// </summary>
+/*
+[HarmonyPatch]
+internal static class DelicateReplayLimitPatch
+{
+    [HarmonyPatch(typeof(CardModel), "GetEnchantedReplayCount")]
+    internal static int Postfix(int __result, CardModel __instance)
+    {
+        if (__instance.DynamicVars.ContainsKey("Delicate"))
+        {
+            return Math.Min(Math.Max(__instance.DynamicVars["Delicate"].IntValue - 1, 0), __result);
+        }
+        return __result;
+    }
+}
+*/
+
+/// <summary>
+///     Exhausts Delicate 0 cards when they move piles to account for Replay jank
+/// </summary>
+[HarmonyPatch]
+internal static class KillDelicateZeroCardsPatch
+{
+    [HarmonyPatch(typeof(AbstractModel), "AfterCardChangedPiles")]
+    internal static async void Postfix(CardModel card, PileType oldPileType, AbstractModel? clonedBy, AbstractModel __instance)
+    {
+        if (card?.Pile == null)
+        {
+            return;
+        }
+
+        if (card != __instance)
+        {
+            return;
+        }
+
+        if ((card.Pile.Type == PileType.Discard || card.Pile.Type == PileType.Hand || card.Pile.Type == PileType.Draw) && card.DynamicVars.ContainsKey("Delicate") && card.DynamicVars["Delicate"].IntValue > -999 && card.DynamicVars["Delicate"].IntValue <= 0)
+        {
+            if (!TailorStitchQueueSingleton.BeingPlayed.Contains(card))
+            {
+                await CardCmd.Exhaust(new ThrowingPlayerChoiceContext(), card);
+            }
         }
     }
 }
@@ -35,13 +86,10 @@ internal static class DelicatePatch
 [HarmonyPatch]
 internal static class DelicateHideExhaustPatch
 {
-    [HarmonyPatch(typeof(CardModel), "GetDescriptionForPile", typeof(PileType),
-        typeof(CardModel.DescriptionPreviewType), typeof(Creature))]
-    internal static string Postfix(string __result, PileType pileType, CardModel.DescriptionPreviewType previewType,
-        Creature? target, CardModel __instance)
+    [HarmonyPatch(typeof(CardModel), "GetDescriptionForPile", typeof(PileType), typeof(CardModel.DescriptionPreviewType), typeof(Creature))]
+    internal static string Postfix(string __result, PileType pileType, CardModel.DescriptionPreviewType previewType, Creature? target, CardModel __instance)
     {
-        if (__instance.DynamicVars.ContainsKey("Delicate") && __instance.DynamicVars["Delicate"].BaseValue > -999 &&
-            __instance.Keywords.Contains(CardKeyword.Exhaust))
+        if (__instance.DynamicVars.ContainsKey("Delicate") && __instance.DynamicVars["Delicate"].BaseValue > -999 && __instance.Keywords.Contains(CardKeyword.Exhaust))
         {
             var exhaustString = "\n" + CardKeyword.Exhaust.GetCardText();
             var exhaustStringIndex = __result.Find(exhaustString);

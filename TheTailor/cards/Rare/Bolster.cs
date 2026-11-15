@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheTailor.Character;
 using TheTailor.Minions;
 using TheTailor.Powers;
+using TheTailor.Relics.Common;
 
 namespace TheTailor.Cards.Rare;
 
@@ -19,49 +20,21 @@ public class Bolster() : CustomCardModel(1, CardType.Skill, CardRarity.Rare, Tar
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/bolsterBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/bolsterBeta.png";
     protected override IEnumerable<DynamicVar> CanonicalVars => [new("Power", 1)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(choiceContext, Owner, true);
-
-        var accessor = new PetsOrderAccessor(Owner);
-        if (accessor is { Pets.Count: > 0 })
-            foreach (var creature in accessor.Pets)
-                switch (creature.Monster)
-                {
-                    case MinionLinen:
-                        await PowerCmd.Apply<LinenPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                    case MinionCotton:
-                        await PowerCmd.Apply<CottonPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                    case MinionDenim:
-                        await PowerCmd.Apply<DenimPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                    case MinionWool:
-                        await PowerCmd.Apply<WoolPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                    case MinionSilk:
-                        await PowerCmd.Apply<SilkPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                    case MinionBurlap:
-                        await PowerCmd.Apply<BurlapPower>(choiceContext, creature, DynamicVars["Power"].IntValue,
-                            Owner.Creature, this);
-                        break;
-                }
+        var result = await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(choiceContext, Owner, true);
+        if (result != null)
+        {
+            await PowerCmd.Apply<BolsterPower>(choiceContext, result, DynamicVars["Power"].IntValue, cardPlay.Player.Creature, null);
+        }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Power"].UpgradeValueBy(1);
+        EnergyCost.UpgradeBy(-1);
     }
 }

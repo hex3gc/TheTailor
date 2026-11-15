@@ -18,38 +18,12 @@ public sealed class LightTouchPower : CustomPowerModel
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override object InitInternalData()
-    {
-        return new Data();
-    }
-
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (cardPlay.Card.Owner.Creature == Owner && cardPlay.Card.DynamicVars.ContainsKey("Delicate") &&
-            cardPlay.Card.DynamicVars["Delicate"].BaseValue >= 0)
+        if (cardPlay.Card.Owner.Creature == Owner && cardPlay.Card.DynamicVars.ContainsKey("Delicate") && cardPlay.Card.DynamicVars["Delicate"].BaseValue > -999)
         {
-            var internalData = GetInternalData<Data>();
-            if (!internalData.thisTurn)
-            {
-                Flash();
-                await PlayerCmd.GainEnergy(Amount, Owner.Player);
-                internalData.thisTurn = true;
-            }
+            Flash();
+            cardPlay.Card.EnergyCost.UpgradeBy(-Amount);
         }
-    }
-
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
-        IEnumerable<Creature> participants)
-    {
-        if (participants.Contains(Owner))
-        {
-            var data = GetInternalData<Data>();
-            data.thisTurn = false;
-        }
-    }
-
-    private class Data
-    {
-        public bool thisTurn;
     }
 }

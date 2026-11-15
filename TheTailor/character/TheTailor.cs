@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Patches.UI;
 using BaseLib.Utils.NodeFactories;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
@@ -57,6 +58,13 @@ public class TheTailor : PlaceholderCharacterModel
             return icon;
         }
     }
+
+    public override RelicIconData CustomYummyCookie => new
+    (
+        "res://TheTailor/images/relics/yummyCookieBig.png",
+        "res://TheTailor/images/relics/yummyCookie.png",
+        "res://TheTailor/images/relics/yummyCookieOutline.png"
+    );
 
     public override string CustomIconTexturePath => "res://TheTailor/images/charui/character_icon_tailor.png";
 

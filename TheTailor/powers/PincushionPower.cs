@@ -31,8 +31,7 @@ public sealed class PincushionPower : CustomPowerModel
         }
     }
 
-    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature,
-        bool wasRemovalPrevented, float deathAnimLength)
+    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
     {
         if (Owner == creature && Applier != null)
             await PowerCmd.Apply<PincushionStrengthPower>(choiceContext, Applier, Amount, Applier, null);

@@ -22,11 +22,14 @@ public sealed class HighFashionPower : CustomPowerModel
         if (Owner == player.Creature)
         {
             Flash();
-            var enumerable = Owner.Player.PlayerCombatState.AllCards.Where(cm =>
-                cm.MaxUpgradeLevel > 1 && cm.IsUpgradable && cm.Type != CardType.Status && cm.Type != CardType.Curse);
+            var enumerable = Owner.Player.PlayerCombatState.AllCards.Where(cm => cm.MaxUpgradeLevel > 1 && cm.IsUpgradable && cm.Type != CardType.Status && cm.Type != CardType.Curse);
             foreach (var cm in enumerable)
+            {
                 for (var i = 0; i < Amount; i++)
+                {
                     CardCmd.Upgrade(cm);
+                }
+            }
         }
     }
 }

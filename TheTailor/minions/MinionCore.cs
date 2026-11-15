@@ -304,11 +304,11 @@ public static class MinionHooks
 /// <summary>
 ///     Keeps local minions clickable even when the game toggles interactability.
 /// </summary>
-[HarmonyPatch(typeof(NCreature), nameof(NCreature.ToggleIsInteractable))]
+[HarmonyPatch(typeof(NCreature), nameof(NCreature.SetIsInteractable))]
 internal static class MinionInteractablePatch
 {
     [HarmonyPrefix]
-    private static void Prefix(NCreature __instance, ref bool on)
+    private static void Prefix(NCreature __instance, ref bool on, ref bool changeVisibilityImmediately)
     {
         if (__instance.Entity.Monster is TailorMinion && LocalContext.IsMe(__instance.Entity.PetOwner)) on = true;
     }

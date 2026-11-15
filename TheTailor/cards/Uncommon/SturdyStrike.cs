@@ -12,16 +12,14 @@ using TheTailor.Minions;
 namespace TheTailor.Cards.Uncommon;
 
 [Pool(typeof(TheTailorCardPool))]
-public class SturdyStrike() : CustomCardModel(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public class SturdyStrike() : CustomCardModel(3, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike, CardTag.Minion];
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/sturdyStrikeBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/sturdyStrikeBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/sturdyStrikeBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8, ValueProp.Move)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(TheTailor.Keywords.DenimMinion)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10, ValueProp.Move)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.DenimMinion)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -37,6 +35,6 @@ public class SturdyStrike() : CustomCardModel(2, CardType.Attack, CardRarity.Unc
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4);
+        DynamicVars.Damage.UpgradeValueBy(6);
     }
 }

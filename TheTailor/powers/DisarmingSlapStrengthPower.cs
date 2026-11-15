@@ -17,10 +17,7 @@ public sealed class DisarmingSlapStrengthPower : CustomTemporaryPowerModel
     public override string? CustomBigBetaIconPath => "res://TheTailor/images/powers/disarmingSlapStrength.png";
     public override AbstractModel OriginModel => ModelDb.Card<DisarmingSlap>();
     public override PowerModel InternallyAppliedPower => ModelDb.Power<StrengthPower>();
-
-    protected override Func<PlayerChoiceContext, Creature, decimal, Creature?, CardModel?, bool, Task> ApplyPowerFunc =>
-        PowerCmd.Apply<StrengthPower>;
-
+    protected override Func<PlayerChoiceContext, Creature, decimal, Creature?, CardModel?, bool, Task> ApplyPowerFunc => PowerCmd.Apply<StrengthPower>;
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromPower<StrengthPower>()];
     protected override bool InvertInternalPowerAmount => true;
     public override PowerType Type => PowerType.Debuff;

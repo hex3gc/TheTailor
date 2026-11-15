@@ -18,17 +18,28 @@ public class DressUp() : CustomCardModel(1, CardType.Skill, CardRarity.Uncommon,
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/dressUpBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/dressUpBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/dressUpBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new("TempDex", 2), new("Delicate", 3)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new("TempDex", 2), new("Delicate", 2)];
 
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(TheTailor.Keywords.SilkMinion)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.SilkMinion)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await PowerCmd.Apply<SilkDexterityPower>(choiceContext, Owner.Creature, DynamicVars["TempDex"].IntValue,
             Owner.Creature, this);
-        await TailorMinionCmd.AddOrReplaceMinion<MinionSilk>(choiceContext, Owner, true);
+
+        var accessor = new PetsOrderAccessor(cardPlay.Card.Owner);
+        if (accessor is { Pets: not null })
+        {
+            for (var i = 0; i < accessor.Pets.Count; i++)
+            {
+                if (accessor.Pets[i].Monster is TailorMinion)
+                {
+                    await TailorMinionCmd.ReplaceMinion<MinionSilk>(choiceContext, cardPlay.Card.Owner, i, false, true);
+                    break;
+                }
+            }
+        }
     }
 
     protected override void OnUpgrade()

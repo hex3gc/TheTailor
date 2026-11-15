@@ -11,7 +11,7 @@ using TheTailor.Powers;
 namespace TheTailor.Cards.Uncommon;
 
 [Pool(typeof(TheTailorCardPool))]
-public class LightTouch() : CustomCardModel(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public class LightTouch() : CustomCardModel(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/lightTouchBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/lightTouchBeta.png";

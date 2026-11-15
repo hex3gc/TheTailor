@@ -39,8 +39,7 @@ public abstract class TailorMinion : CustomMonsterModel
         return Task.CompletedTask;
     }
 
-    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature,
-        bool wasRemovalPrevented, float deathAnimLength)
+    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
     {
         if (creature.Monster == this) SoundEffects.MinionDeath.Play();
     }
@@ -59,14 +58,14 @@ internal static class MinionPapercutsPatch
         if (dealer != __instance.Owner || target is not { IsPlayer: false, PetOwner: not null } ||
             !props.IsPoweredAttack() ||
             result.UnblockedDamage <= 0) return;
-        await CreatureCmd.LoseMaxHp(choiceContext, target, __instance.Amount, false);
+        await CreatureCmd.LoseMaxHp(choiceContext, target, __instance.Amount, null);
         if (result.OverkillDamage <= 0) return;
         var accessor = new PetsOrderAccessor(target.PetOwner);
         var indexOfPet = accessor.Pets.IndexOf(target);
         if (indexOfPet == accessor.Pets.Count - 1)
-            await CreatureCmd.LoseMaxHp(choiceContext, target.PetOwner.Creature, __instance.Amount, false);
+            await CreatureCmd.LoseMaxHp(choiceContext, target.PetOwner.Creature, __instance.Amount, null);
         else if (accessor.Pets.Count - 1 > indexOfPet)
-            await CreatureCmd.LoseMaxHp(choiceContext, accessor.Pets[indexOfPet + 1], __instance.Amount, false);
+            await CreatureCmd.LoseMaxHp(choiceContext, accessor.Pets[indexOfPet + 1], __instance.Amount, null);
     }
 }
 

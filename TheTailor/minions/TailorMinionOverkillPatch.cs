@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -15,29 +16,29 @@ namespace TheTailor.Minions;
 ///     A clone of MinionGuardianOverkillPatch working on Multiplayer
 ///     - This failed to make Phantasmal Gardeners give block, so certain things may cause problems with damage calculation
 /// </summary>
-[HarmonyPatch(typeof(CreatureCmd), "Damage", typeof(PlayerChoiceContext), typeof(IEnumerable<Creature>),
-    typeof(decimal), typeof(ValueProp), typeof(Creature), typeof(CardModel), typeof(CardPlay))]
+[HarmonyPatch(typeof(CreatureCmd), "Damage", typeof(PlayerChoiceContext), typeof(IEnumerable<DamageTargetData>),
+    typeof(decimal), typeof(ValueProp), typeof(Creature), typeof(CardModel), typeof(CardPlay), typeof(ModifyDamageHookType))]
 public static class TailorMinionOverkillPatch
 {
     private static readonly AsyncLocal<bool> IsHandling = new();
     public static readonly AsyncLocal<Creature?> SuppressedOwner = new();
 
     [HarmonyPrefix]
-    private static bool Prefix(PlayerChoiceContext choiceContext, IEnumerable<Creature> targets, decimal amount,
-        ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay,
+    private static bool Prefix(PlayerChoiceContext choiceContext, IEnumerable<DamageTargetData> targetData, decimal amount,
+        ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay, ModifyDamageHookType modifyDamageHookType,
         ref Task<IEnumerable<DamageResult>> __result)
     {
         var atLeastOneMinion = false;
-        foreach (var creature in targets)
-            if (creature.Pets != null && creature.Pets.Any(c => c.Monster is TailorMinion))
+        foreach (var data in targetData)
+            if (data.target.Pets != null && data.target.Pets.Any(c => c.Monster is TailorMinion))
                 atLeastOneMinion = true;
 
         if (!atLeastOneMinion) return true;
         if (IsHandling.Value) return true;
-        if (targets.Count() == 1 && !ShouldHandle(targets.First(), props)) return true;
-        if (targets.Any(c => c.IsEnemy)) return true;
+        if (targetData.Count() == 1 && !ShouldHandle(targetData.First().target, props)) return true;
+        if (targetData.Any(c => c.target.IsEnemy)) return true;
 
-        var list = targets.ToList();
+        var list = targetData.ToList();
         __result = HandleWithOverkillRedirect(choiceContext, list, amount, props, dealer, cardSource, cardPlay);
 
         return false;
@@ -53,33 +54,33 @@ public static class TailorMinionOverkillPatch
     }
 
     private static async Task<IEnumerable<DamageResult>> HandleWithOverkillRedirect(PlayerChoiceContext choiceContext,
-        IReadOnlyList<Creature> targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource,
+        IReadOnlyList<DamageTargetData> targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource,
         CardPlay? cardPlay)
     {
         IsHandling.Value = true;
         var ret = new List<DamageResult>();
 
-        foreach (var owner in targets)
+        foreach (var targetData in targets)
         {
-            if (!ShouldHandle(owner, props))
+            if (!ShouldHandle(targetData.target, props))
             {
-                ret.Concat(await CreatureCmd.Damage(choiceContext, owner, amount, props, dealer, cardSource, cardPlay));
+                ret.Concat(await CreatureCmd.Damage(choiceContext, targetData.target, amount, props, dealer, cardSource, cardPlay));
                 continue;
             }
 
             var guardianOrder =
             (
-                from p in PetOrderSnapshotManager.GetSnapshot(owner.Player, false)
+                from p in PetOrderSnapshotManager.GetSnapshot(targetData.target.Player, false)
                 where IsFrontGuardian(p) && p.CombatId.HasValue
                 select p.CombatId!.Value
             ).ToList();
 
-            SuppressedOwner.Value = owner;
+            SuppressedOwner.Value = targetData.target;
             List<DamageResult> initialResults;
             try
             {
                 initialResults =
-                    (await CreatureCmd.Damage(choiceContext, owner, amount, props, dealer, cardSource, cardPlay))
+                    (await CreatureCmd.Damage(choiceContext, targetData.target, amount, props, dealer, cardSource, cardPlay))
                     .ToList();
             }
             finally
@@ -89,7 +90,7 @@ public static class TailorMinionOverkillPatch
 
             var damageResult = initialResults.FirstOrDefault(delegate(DamageResult r)
             {
-                if (r.Receiver != owner && r.Receiver.PetOwner == owner.Player)
+                if (r.Receiver != targetData.target && r.Receiver.PetOwner == targetData.target.Player)
                 {
                     if (!IsFrontGuardian(r.Receiver))
                     {
@@ -123,8 +124,8 @@ public static class TailorMinionOverkillPatch
             {
                 if (overkill > 0m)
                 {
-                    var item = (await CreatureCmd.Damage(choiceContext, owner, overkill, directProps, dealer,
-                        cardSource, cardPlay)).FirstOrDefault() ?? new DamageResult(owner, directProps);
+                    var item = (await CreatureCmd.Damage(choiceContext, targetData.target, overkill, directProps, dealer,
+                        cardSource, cardPlay)).FirstOrDefault() ?? new DamageResult(targetData.target, directProps);
                     redirectedResults.Add(item);
                 }
 
@@ -137,7 +138,7 @@ public static class TailorMinionOverkillPatch
             {
                 if (!(overkill <= 0m))
                 {
-                    var defender = owner.CombatState.GetCreature(item3);
+                    var defender = targetData.target.CombatState.GetCreature(item3);
                     if (defender != null && defender.IsAlive && IsFrontGuardian(defender))
                     {
                         var damageResult2 =
@@ -155,8 +156,8 @@ public static class TailorMinionOverkillPatch
 
             if (overkill > 0m)
             {
-                var item2 = (await CreatureCmd.Damage(choiceContext, owner, overkill, directProps, dealer, cardSource,
-                    cardPlay)).FirstOrDefault() ?? new DamageResult(owner, directProps);
+                var item2 = (await CreatureCmd.Damage(choiceContext, targetData.target, overkill, directProps, dealer, cardSource,
+                    cardPlay)).FirstOrDefault() ?? new DamageResult(targetData.target, directProps);
                 redirectedResults.Add(item2);
             }
 

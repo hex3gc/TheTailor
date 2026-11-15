@@ -19,8 +19,7 @@ public class TheChest() : CustomCardModel(9, CardType.Skill, CardRarity.Uncommon
     protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2)];
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card,
-        bool causedByEthereal)
+    public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
     {
         if (card == this && card.Owner == Owner)
         {

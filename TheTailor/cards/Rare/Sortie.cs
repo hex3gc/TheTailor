@@ -18,7 +18,7 @@ public class Sortie() : CustomCardModel(2, CardType.Attack, CardRarity.Rare, Tar
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/sortieBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/sortieBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/sortieBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(22, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(24, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

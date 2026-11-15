@@ -108,8 +108,7 @@ internal static class StitchHovertipPatch
 internal static class StitchRemovePatch
 {
     [HarmonyPatch(typeof(AbstractModel), "AfterCardChangedPiles")]
-    internal static async void Postfix(CardModel card, PileType oldPileType, AbstractModel? clonedBy,
-        AbstractModel __instance)
+    internal static async void Postfix(CardModel card, PileType oldPileType, AbstractModel? clonedBy, AbstractModel __instance)
     {
         if (card?.Pile == null) return;
 

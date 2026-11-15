@@ -17,20 +17,14 @@ public class Blanket() : CustomCardModel(2, CardType.Skill, CardRarity.Rare, Tar
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/blanketBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/blanketBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/blanketBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(3)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(TheTailor.Keywords.WoolMinion)];
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(3), new("Delicate", 2)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.WoolMinion), HoverTipFactory.FromKeyword(TheTailor.Keywords.Delicate), HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        for (var i = 0; i < 2; i++) await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(choiceContext, Owner, true);
-
-        await TailorMinionCmd.GiveMinionHealth<TailorMinion>(choiceContext, cardPlay.Card.Owner,
-            DynamicVars.Heal.IntValue, TailorMinionCmd.MinionTriggerType.All);
+        await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(choiceContext, Owner, true);
+        await TailorMinionCmd.GiveMinionHealth<TailorMinion>(choiceContext, cardPlay.Card.Owner, DynamicVars.Heal.IntValue, TailorMinionCmd.MinionTriggerType.All);
     }
 
     protected override void OnUpgrade()

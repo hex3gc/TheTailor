@@ -9,12 +9,12 @@ using TheTailor.Character;
 namespace TheTailor.Cards.Uncommon;
 
 [Pool(typeof(TheTailorCardPool))]
-public class Coffee() : CustomCardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+public class Coffee() : CustomCardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/coffeeBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/coffeeBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/coffeeBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new("Delicate", 2), new EnergyVar(1)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new("Delicate", 2), new EnergyVar(2)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

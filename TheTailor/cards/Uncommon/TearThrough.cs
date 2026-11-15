@@ -18,10 +18,7 @@ public class TearThrough() : CustomCardModel(1, CardType.Attack, CardRarity.Unco
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/tearThroughBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/tearThroughBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/tearThroughBeta.png";
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-        [HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)];
-
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion)];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -34,13 +31,16 @@ public class TearThrough() : CustomCardModel(1, CardType.Attack, CardRarity.Unco
 
         var accessor = new PetsOrderAccessor(cardPlay.Card.Owner);
         if (accessor is { Pets: not null })
+        {
             for (var i = 0; i < accessor.Pets.Count; i++)
+            {
                 if (accessor.Pets[i].Monster is TailorMinion)
                 {
-                    await TailorMinionCmd.ReplaceMinion<MinionBurlap>(choiceContext, cardPlay.Card.Owner, i, false,
-                        true);
+                    await TailorMinionCmd.ReplaceMinion<MinionBurlap>(choiceContext, cardPlay.Card.Owner, i, false, true);
                     break;
                 }
+            }
+        }
     }
 
     protected override void OnUpgrade()

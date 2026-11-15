@@ -3,14 +3,14 @@
   "name": "TheTailor",
   "author": "hex3",
   "description": "A stylish clothier with a score to settle. Gives life to inanimate fabrics.",
-  "version": "0.7.6",
+  "version": "0.8.2",
   "has_pck": true,
   "has_dll": true,
-  "min_game_version": "0.111.0",
+  "min_game_version": "0.113.0",
   "dependencies": [
     {
       "id": "BaseLib",
-      "min_version": "3.4.5"
+      "min_version": "3.4.8"
     }
   ],
   "affects_gameplay": true

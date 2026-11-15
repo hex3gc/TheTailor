@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheTailor.Character;
 using TheTailor.Minions;
+using TheTailor.Relics.Common;
 
 namespace TheTailor.Cards.Uncommon;
 
@@ -19,23 +20,15 @@ public class XXL() : CustomCardModel(3, CardType.Skill, CardRarity.Uncommon, Tar
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/xxlBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/xxlBeta.png";
     protected override IEnumerable<DynamicVar> CanonicalVars => [new HealVar(12)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.LinenMinion),
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.Premium)
-    ];
-
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.LinenMinion), HoverTipFactory.FromKeyword(TheTailor.Keywords.Premium)];
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // TODO : Heavy Duty is a card not a relic i don't know whats the plan here.
-        var extraMaxHp = Owner.Relics.OfType<HeavyDuty>().Count();
+        var extraMaxHp = Owner.Relics.OfType<ToughTrousers>().Count();
 
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(choiceContext, Owner, true,
-            DynamicVars.Heal.IntValue + extraMaxHp);
+        await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(choiceContext, Owner, true, DynamicVars.Heal.IntValue + extraMaxHp);
     }
 
     protected override void OnUpgrade()

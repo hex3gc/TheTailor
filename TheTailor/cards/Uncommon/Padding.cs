@@ -19,15 +19,9 @@ public class Padding() : CustomCardModel(2, CardType.Skill, CardRarity.Uncommon,
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/paddingBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/paddingBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/paddingBeta.png";
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.Delicate),
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion),
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.LinenMinion)
-    ];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4, ValueProp.Move), new("Delicate", 2)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.BurlapMinion), HoverTipFactory.FromKeyword(TheTailor.Keywords.LinenMinion)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4, ValueProp.Move)];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -40,8 +34,6 @@ public class Padding() : CustomCardModel(2, CardType.Skill, CardRarity.Uncommon,
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(2);
-        DynamicVars["Delicate"].UpgradeValueBy(1);
-        RemoveKeyword(CardKeyword.Exhaust);
+        DynamicVars.Block.UpgradeValueBy(4);
     }
 }

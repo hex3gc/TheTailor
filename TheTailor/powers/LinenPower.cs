@@ -34,8 +34,7 @@ public sealed class LinenPower : CustomPowerModel
         }
     }
 
-    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature,
-        bool wasRemovalPrevented, float deathAnimLength)
+    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
     {
         if (Owner == creature && !wasRemovalPrevented && TailorLastAttackSingleton.lastAttacker != null)
         {

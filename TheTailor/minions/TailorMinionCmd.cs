@@ -14,6 +14,7 @@ using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
 using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.Saves;
+using MegaCrit.Sts2.Core.TestSupport;
 using TheTailor.Cards.Token;
 using TheTailor.Extensions;
 using TheTailor.Powers;
@@ -88,55 +89,62 @@ public static class TailorMinionCmd
     ///     Adds a minion. If too many exist, prompts the player to select one for replacing. Returns true if the minion was
     ///     added
     /// </summary>
-    public static async Task<bool> AddOrReplaceMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner,
+    public static async Task<Creature?> AddOrReplaceMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner,
         bool canSkip, int maxHpOverride = 0, int withTriggers = 0) where T : TailorMinion
     {
         if (!CanMinionBeAdded(owner))
         {
             var replaceIndex = await SelectionPromptFromCurrentMinions<T>(playerChoiceContext, owner, canSkip);
 
-            if (replaceIndex < 0) return false;
+            if (replaceIndex < 0) 
+            {
+                return null;
+            }
 
-            if (await ReplaceMinion<T>(playerChoiceContext, owner, replaceIndex, maxHpOverride: maxHpOverride,
-                    withTriggers: withTriggers)) return true;
+            return await ReplaceMinion<T>(playerChoiceContext, owner, replaceIndex, maxHpOverride: maxHpOverride, withTriggers: withTriggers);
         }
         else
         {
             var result = await MinionCmd.AddMinion<T>(playerChoiceContext, owner);
-            if (maxHpOverride > 0 && result != null) await CreatureCmd.SetMaxAndCurrentHp(result, maxHpOverride);
+            if (maxHpOverride > 0 && result != null) 
+            { 
+                await CreatureCmd.SetMaxAndCurrentHp(result, maxHpOverride);
+            }
 
             await PutOstyAtBack(playerChoiceContext, owner);
 
-            if (withTriggers <= 0 || result == null) return true;
+            if (withTriggers <= 0 || result == null) 
+            {
+                return result;
+            }
+
             for (var i = 0; i < withTriggers; i++)
-                await TriggerMinionAbility<TailorMinion>(playerChoiceContext, owner, MinionTriggerType.First,
-                    result.Monster as TailorMinion);
+            {
+                await TriggerMinionAbility<TailorMinion>(playerChoiceContext, owner, MinionTriggerType.First, result.Monster as TailorMinion);
+            }
 
-            return true;
+            return result;
         }
-
-        return false;
     }
 
     /// <summary>
     ///     Replaces a minion in their current position. Set convert to true to retain its max HP for the new minion
     /// </summary>
-    public static async Task<bool> ReplaceMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner,
-        int replaceIndex, bool convert = false, bool first = false, int maxHpOverride = 0, int withTriggers = 0)
-        where T : TailorMinion
+    public static async Task<Creature?> ReplaceMinion<T>(PlayerChoiceContext playerChoiceContext, Player owner, int replaceIndex, bool convert = false, bool first = false, int maxHpOverride = 0, int withTriggers = 0) where T : TailorMinion
     {
         var accessor = new PetsOrderAccessor(owner);
 
         if (first)
             foreach (var creature in accessor.Pets)
+            {
                 if (creature.Monster is TailorMinion)
                 {
                     replaceIndex = accessor.Pets.IndexOf(creature);
                     break;
                 }
+            }
 
-        if (accessor is { Pets: not null } && accessor.Pets[replaceIndex] != null &&
-            accessor.Pets[replaceIndex].Monster is TailorMinion)
+        if (accessor is { Pets: not null } && accessor.Pets[replaceIndex] != null && accessor.Pets[replaceIndex].Monster is TailorMinion)
         {
             var oldMinionMaxHp = accessor.Pets[replaceIndex].MaxHp;
 
@@ -153,9 +161,12 @@ public static class TailorMinionCmd
             await PutOstyAtBack(playerChoiceContext, owner);
 
             if (withTriggers > 0)
+            {
                 for (var i = 0; i < withTriggers; i++)
-                    await TriggerMinionAbility<TailorMinion>(playerChoiceContext, owner, MinionTriggerType.First,
-                        newMinion.Monster as TailorMinion);
+                {
+                    await TriggerMinionAbility<TailorMinion>(playerChoiceContext, owner, MinionTriggerType.First, newMinion.Monster as TailorMinion);
+                }
+            }
 
             if (convert)
             {
@@ -163,12 +174,15 @@ public static class TailorMinionCmd
                 await CreatureCmd.SetCurrentHp(newMinion, oldMinionMaxHp);
             }
 
-            if (maxHpOverride > 0 && newMinion != null) await CreatureCmd.SetMaxAndCurrentHp(newMinion, maxHpOverride);
+            if (maxHpOverride > 0 && newMinion != null)
+            {
+                await CreatureCmd.SetMaxAndCurrentHp(newMinion, maxHpOverride);
+            }
 
-            return true;
+            return newMinion;
         }
 
-        return false;
+        return null;
     }
 
     /// <summary>
@@ -401,10 +415,11 @@ public static class TailorMinionCmd
             return null;
         }
 
+        ICardSelector? selector = RunManager.Instance.CardSelectorStack.GetSelector(player);
         CardModel? result;
-        if (CardSelectCmd.Selector != null)
+        if (selector != null)
         {
-            result = (await CardSelectCmd.Selector.GetSelectedCards(cards, 0, 1)).FirstOrDefault();
+            result = (await selector.GetSelectedCards(cards, 0, 1)).FirstOrDefault();
         }
         else
         {
@@ -412,9 +427,10 @@ public static class TailorMinionCmd
             await context.SignalPlayerChoiceBegun(player, PlayerChoiceOptions.None);
             if (CardSelectCmd.ShouldSelectLocalCard(player))
             {
-                if (CardSelectCmd.LocalSelector != null)
+                ICardSelector? localSelector = RunManager.Instance.CardSelectorStack.LocalSelector;
+                if (localSelector != null)
                 {
-                    result = (await CardSelectCmd.LocalSelector.GetSelectedCards(cards, 0, 1)).FirstOrDefault();
+                    result = (await localSelector.GetSelectedCards(cards, 0, 1)).FirstOrDefault();
                 }
                 else
                 {

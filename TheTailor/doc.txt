@@ -8,3 +8,20 @@
 -- CURRENT ISSUES --
 - Byrd/Legion have odd positioning
 - Osty stats covered up by Minions
+
+### 0.8.2
+
+Cards
+- Reworked **Medical Kit** into **Cut Out**
+Old: Add 1 Patch into your Hand. Transform all Status cards in your Hand into Patches.
+New: Delicate 2. Exhaust 2 cards in your Hand. Add 2 Patches(+) into your Hand.
+- Reworked **Heavy Duty**
+Old: Whenever a Minion is destroyed, gain 1 Strength.
+New: The first time a Minion is destroyed each turn, gain 1 Strength.
+- Reworked **Light Touch**
+Old: The first time you play a Delicate card each turn, gain 1 Energy.
+New: Delicate cards cost 1 less Energy each time they're played.
+- Increased **Coffee** Energy cost (0 => 1)
+- Increased **Coffee** Energy gain (1+ => 2+)
+- Increased **Soft Strike** Energy cost (0 => 1)
+- Increased **Soft Strike** damage (4(6) => 6(9))

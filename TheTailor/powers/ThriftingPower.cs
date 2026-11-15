@@ -34,9 +34,13 @@ public sealed class ThriftingPower : CustomPowerModel
             {
                 Flash();
                 if (causedByEthereal)
+                {
                     GetInternalData<Data>().etherealCount++;
+                }
                 else
+                {
                     await CardPileCmd.Draw(choiceContext, 1m, Owner.Player);
+                }
                 data.exhaustsThisTurn++;
             }
         }

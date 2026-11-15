@@ -17,7 +17,7 @@ public class GetCreative() : CustomCardModel(1, CardType.Attack, CardRarity.Rare
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/getCreativeBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/getCreativeBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/getCreativeBeta.png";
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8, ValueProp.Move), new("Triggers", 1)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(8, ValueProp.Move), new("Delicate", 2)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -32,24 +32,19 @@ public class GetCreative() : CustomCardModel(1, CardType.Attack, CardRarity.Rare
         switch (random)
         {
             case 0:
-                await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(choiceContext, Owner, true,
-                    withTriggers: DynamicVars["Triggers"].IntValue);
+                await TailorMinionCmd.AddOrReplaceMinion<MinionLinen>(choiceContext, Owner, true);
                 break;
             case 1:
-                await TailorMinionCmd.AddOrReplaceMinion<MinionDenim>(choiceContext, Owner, true,
-                    withTriggers: DynamicVars["Triggers"].IntValue);
+                await TailorMinionCmd.AddOrReplaceMinion<MinionDenim>(choiceContext, Owner, true);
                 break;
             case 2:
-                await TailorMinionCmd.AddOrReplaceMinion<MinionSilk>(choiceContext, Owner, true,
-                    withTriggers: DynamicVars["Triggers"].IntValue);
+                await TailorMinionCmd.AddOrReplaceMinion<MinionSilk>(choiceContext, Owner, true);
                 break;
             case 3:
-                await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(choiceContext, Owner, true,
-                    withTriggers: DynamicVars["Triggers"].IntValue);
+                await TailorMinionCmd.AddOrReplaceMinion<MinionBurlap>(choiceContext, Owner, true);
                 break;
             case 4:
-                await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(choiceContext, Owner, true,
-                    withTriggers: DynamicVars["Triggers"].IntValue);
+                await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(choiceContext, Owner, true);
                 break;
         }
     }
@@ -57,6 +52,6 @@ public class GetCreative() : CustomCardModel(1, CardType.Attack, CardRarity.Rare
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(4);
-        DynamicVars["Triggers"].UpgradeValueBy(1);
+        DynamicVars["Delicate"].UpgradeValueBy(1);
     }
 }

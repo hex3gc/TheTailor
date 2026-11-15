@@ -20,23 +20,15 @@ public class Comfort() : CustomCardModel(2, CardType.Skill, CardRarity.Uncommon,
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/comfortBeta.png";
     public override string? PortraitPath => "res://TheTailor/images/card_portraits/comfortBeta.png";
     public override string? BetaPortraitPath => "res://TheTailor/images/card_portraits/comfortBeta.png";
-
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(8, ValueProp.Move), new PowerVar<WeakPower>(1)];
-
-    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
-    [
-        HoverTipFactory.FromKeyword(TheTailor.Keywords.WoolMinion), HoverTipFactory.FromPower<WeakPower>()
-    ];
-
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4, ValueProp.Move), new PowerVar<WeakPower>(1)];
+    protected override IEnumerable<IHoverTip> ExtraHoverTips => [HoverTipFactory.FromKeyword(TheTailor.Keywords.WoolMinion), HoverTipFactory.FromPower<WeakPower>()];
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-        await PowerCmd.Apply<WeakPower>(choiceContext, CombatState?.HittableEnemies, DynamicVars.Weak.BaseValue,
-            Owner.Creature, this);
+        await PowerCmd.Apply<WeakPower>(choiceContext, CombatState?.HittableEnemies, DynamicVars.Weak.BaseValue, Owner.Creature, this);
         await TailorMinionCmd.AddOrReplaceMinion<MinionWool>(choiceContext, Owner, true);
     }
 
