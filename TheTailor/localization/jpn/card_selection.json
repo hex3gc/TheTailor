@@ -1,7 +1,7 @@
 {
-  "TO_REPLACE_MINION": "{0}と置き換えるミニオンを選択",
-  "TO_STITCH": "縫合するカードを{Amount}枚選択",
-  "TO_STITCH_CLONE": "複製して縫合するカードを1枚選択",
-  "TO_STITCH_PATCH": "パッチと縫合するカードを{Amount}枚選択",
-  "TO_STITCH_SLIPPER": "スリッパと縫合するカードを{Amount}枚選択"
+  "TO_REPLACE_MINION": "{0}と置き換える[gold]ミニオン[/gold]を選択",
+  "TO_STITCH": "[gold]縫合[/gold]するカードを[blue]{Amount}[/blue]枚選択",
+  "TO_STITCH_CLONE": "複製して[gold]縫合[/gold]するカードを[blue]1[/blue]枚選択",
+  "TO_STITCH_PATCH": "[gold]パッチ[/gold]と[gold]縫合[/gold]するカードを[blue]{Amount}[/blue]枚選択",
+  "TO_STITCH_SLIPPER": "[gold]スリッパ[/gold]と[gold]縫合[/gold]するカードを[blue]{Amount}[/blue]枚選択"
 }
