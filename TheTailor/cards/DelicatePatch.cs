@@ -70,7 +70,10 @@ internal static class KillDelicateZeroCardsPatch
             return;
         }
 
-        if ((card.Pile.Type == PileType.Discard || card.Pile.Type == PileType.Hand || card.Pile.Type == PileType.Draw) && card.DynamicVars.ContainsKey("Delicate") && card.DynamicVars["Delicate"].IntValue > -999 && card.DynamicVars["Delicate"].IntValue <= 0)
+        var extraDelicacies = 0;
+        extraDelicacies += card.Owner.Creature.GetPowerAmount<SteadyHandPower>();
+
+        if ((card.Pile.Type == PileType.Discard || card.Pile.Type == PileType.Hand || card.Pile.Type == PileType.Draw) && card.DynamicVars.ContainsKey("Delicate") && card.DynamicVars["Delicate"].IntValue > -999 && card.DynamicVars["Delicate"].IntValue + extraDelicacies <= 0)
         {
             if (!TailorStitchQueueSingleton.BeingPlayed.Contains(card))
             {

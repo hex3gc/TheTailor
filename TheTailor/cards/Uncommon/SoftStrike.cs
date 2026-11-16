@@ -14,7 +14,7 @@ using TheTailor.Minions;
 namespace TheTailor.Cards.Uncommon;
 
 [Pool(typeof(TheTailorCardPool))]
-public class SoftStrike() : CustomCardModel(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public class SoftStrike() : CustomCardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override HashSet<CardTag> CanonicalTags => new() { CardTag.Minion, CardTag.Minion };
     public override string? CustomPortraitPath => "res://TheTailor/images/card_portraits/softStrike.png";

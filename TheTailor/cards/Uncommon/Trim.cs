@@ -18,10 +18,11 @@ public class Trim() : CustomCardModel(0, CardType.Skill, CardRarity.Uncommon, Ta
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-        var cardModels = await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1), context: choiceContext,
-            player: Owner, filter: null, source: this);
-        foreach (var cardModel in cardModels) await CardCmd.Exhaust(choiceContext, cardModel);
+        var cardModels = await CardSelectCmd.FromHand(prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1), context: choiceContext, player: Owner, filter: null, source: this);
+        foreach (var cardModel in cardModels) 
+        {
+            await CardCmd.Exhaust(choiceContext, cardModel);
+        }
 
         if (IsUpgraded)
         {
